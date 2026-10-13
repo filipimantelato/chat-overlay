@@ -1642,17 +1642,31 @@ html, body, #chat-container { font-size: 16px !important; }
 
 <script>
 
-        function atualizarEmotes() {
+        
+    function atualizarEmotes() {
         document.querySelectorAll('.message .text').forEach(texto => {
-            const imagens = texto.querySelectorAll('img.regular-emote');
-            const textoEscrito = Array.from(texto.childNodes)
-                .filter(node => node.nodeType === Node.TEXT_NODE)
-                .map(node => node.textContent.trim()).join('');
-            const somenteEmote = imagens.length === 1 &&
-                textoEscrito.length === 0 && texto.children.length === 1;
+            const seletor = 'img.regular-emote, img.h-full.w-full';
+            const imagens = texto.querySelectorAll(seletor);
+    
+            const temTexto = Array.from(texto.childNodes).some(node =>
+                node.nodeType === Node.TEXT_NODE &&
+                node.textContent.trim().length > 0
+            );
+    
+            const filhosValidos = Array.from(texto.children).every(el =>
+                el.matches(seletor) ||
+                el.matches('.emote-container')
+            );
+    
+            const somenteEmote =
+                imagens.length > 0 &&
+                !temTexto &&
+                filhosValidos;
+    
             texto.classList.toggle('emote-only', somenteEmote);
         });
     }
+
     const observer = new MutationObserver(atualizarEmotes);
     observer.observe(document.getElementById('message-list-wrapper'), {
         childList: true, subtree: true
