@@ -103,6 +103,7 @@ Keep this file Chrome-80 friendly: no <script type="module">, no top-level impor
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Compact Classic Chat Overlay</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap">
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 
@@ -728,7 +729,7 @@ html, body, .message, .message .name, .message .text {
 
     <div id="message-list-wrapper">
 
-        <div id="spacer" style="height: 2200px; width: 100%;"></div>
+        <div id="spacer" style="display:none; height:0; width:100%;"></div>
 
     </div>
 
@@ -1056,35 +1057,12 @@ html, body, .message, .message .name, .message .text {
 
 
 
-    function adjustMessageWrapperScroll() {
+        // Layout fixo no rodape: sem deslocamento calculado pelo script.
+    function adjustMessageWrapperScroll() {
+        // O CSS fixa o wrapper no rodape. Nenhum translateY necessario.
+    }
 
-        if (reversed) return;
-
-        requestAnimationFrame(function () {
-
-            const wrapperScrollHeight = messageListWrapper.scrollHeight;
-
-            const containerClientHeight = chatContainer.clientHeight;
-
-            let translateY = 0;
-
-            if (wrapperScrollHeight > containerClientHeight) {
-
-                translateY = -(wrapperScrollHeight - containerClientHeight);
-
-            }
-
-            translateY = Math.min(0, translateY);
-
-            messageListWrapper.style.transform = 'translateY(' + translateY + 'px)';
-
-        });
-
-    }
-
-
-
-    function getOverlayMessages() {
+    function getOverlayMessages() {
 
         return Array.from(messageListWrapper.children).filter(function (child) {
 
@@ -1306,9 +1284,9 @@ html, body, .message, .message .name, .message .text {
 
         getOverlayMessages().forEach(removeOverlayMessage);
 
-        topSpacer.style.height = initialSpacerHeight;
+        topSpacer.style.height = '0px';
 
-        messageListWrapper.style.transform = '';
+        messageListWrapper.style.removeProperty('transform');
 
         adjustMessageWrapperScroll();
 
@@ -1612,7 +1590,7 @@ html, body, .message, .message .name, .message .text {
 
                     if (newHeight > MAX_SPACER_HEIGHT_BEFORE_RESET) { newHeight = 0; }
 
-                    topSpacer.style.height = newHeight + 'px';
+                    topSpacer.style.height = '0px';
 
                 }
 
